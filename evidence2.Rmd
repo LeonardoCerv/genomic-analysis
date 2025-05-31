@@ -1,0 +1,332 @@
+---
+title: "ev02"
+author: "Leonardo Cervantes Perez"
+date: "2024-05-04"
+output: pdf_document
+---
+# Evidencia 2
+
+## ¿Cuáles son los virus "similares" a SARS-CoV-2 en el mundo?
+
+1.  SARS-CoV-2
+2.  SARS-CoV
+3.  MERS-CoV
+4.  HCoV-229E
+5.  HCoV-NL63
+6.  HCoV-OC43
+7.  HCoV-HKU1
+
+## Especies que pueden ser cercanos al genoma de SARS-CoV-2? Incluye de qué especies son y menciona las referencias de los artículos consultados en PUBMED.
+
+En el articulo Similarities and Dissimilarities of COVID-19 and Other Coronavirus Diseases, se mencionan los siguientes virus que tienen un genoma similar al del SARS-Cov-2:
+
++-----------+-------------+
+| Host      | Coronavirus |
++===========+=============+
+| Humans    | SARS-CoV    |
+|           |             |
+|           | MERS-CoV    |
+|           |             |
+|           | HCoV-229E   |
+|           |             |
+|           | HCoV-NL63   |
+|           |             |
+|           | HCoV-OC43   |
+|           |             |
+|           | HCoV-HKU1   |
++-----------+-------------+
+| Pig       | TGEV        |
+|           |             |
+|           | PRCoV       |
+|           |             |
+|           | PHEV        |
+|           |             |
+|           | PEDV        |
+|           |             |
+|           | PDCoV       |
+|           |             |
+|           | SADS-CoV    |
++-----------+-------------+
+| Mouse     | MHV         |
++-----------+-------------+
+| Rat       | SDAV        |
+|           |             |
+|           | RCoV-P      |
+|           |             |
+|           | ECoV        |
++-----------+-------------+
+| Cattle    | BCoV        |
++-----------+-------------+
+| Cat       | FIPV        |
+|           |             |
+|           | FECV        |
++-----------+-------------+
+| Dog       | CCoV        |
+|           |             |
+|           | CRCoV       |
++-----------+-------------+
+| Chicken   | IBV         |
++-----------+-------------+
+
+## En relación con la situación actual reflexiona, ¿qué propondrías que se deba hacer durante la contingencia del SARS-CoV-2 en comunidades de bajos recursos? Si tu vivieras en una situación de escasos recursos, ¿qué harías? Justifica tu respuesta.
+
+Durante la contingencia del SARS-CoV-2 en comunidades de bajos recursos, es crucial implementar medidas para proteger la salud y prevenir la propagación del virus. Algunas de las medidas sugeridas son:
+
+1.  Educación sobre el virus: difundir información precisa y confiable sobre el virus y las medidas preventivas mediante carteles, folletos y anuncios en medios locales.
+
+2.  Ayuda financiera: proporcionar asistencia económica a quienes la necesiten para enfrentar la crisis.
+
+3.  Uso de mascarillas: educar sobre el uso adecuado de mascarillas y proveerlas de forma gratuita para quienes no tengan acceso.
+
+4.  Suministros médicos: garantizar el acceso a termómetros, oxígeno y medicamentos en caso de enfermedad.
+
+5.  Lavado de manos frecuente: asegurar acceso a agua y jabón para facilitar el lavado de manos regular.
+
+6.  Promoción del distanciamiento físico: alentar a mantener una distancia mínima de 2 metros entre personas, a pesar de las condiciones de vivienda cercanas.
+
+## Analizar las secuencias de SARS-CoV-2 reportadas en los 10 países con más casos reportados. Y puedes tratar de responder a la pregunta: ¿Son muy diferentes las variantes entre cada país? ¿Es diferente el SARS-CoV-2 entre las diferentes poblaciones: Asiática, Hispana, Europea o Africana?
+
+"SARS-CoV-2USA", "SARS-CoV-2India", "SARS-CoV-2Francia", "SARS-CoV-2 Alemania", "SARS-CoV-2 Brasil", "SARS-CoV-2 Japon","SARS-CoV-2 Corea del Sur", "SARS-CoV-2 Italia","SARS-CoV-2 Rusia","SARS-CoV-2 Turquia"
+
+# Referencias
+
+Torun Ş, Kesim Ç, Süner A, Botan Yıldırım B, Özen Ö, Akçay Ş. Influenza viruses and SARS-CoV-2 in adult: 'Similarities and differences'. Tuberk Toraks. 2021 Dec;69(4):458-468. English. doi: 10.5578/tt.20219603. PMID: 34957739.
+
+Chen Z, Boon SS, Wang MH, Chan RWY, Chan PKS. Genomic and evolutionary comparison between SARS-CoV-2 and other human coronaviruses. J Virol Methods. 2021 Mar;289:114032. doi: 10.1016/j.jviromet.2020.114032. Epub 2020 Dec 5. PMID: 33290786; PMCID: PMC7718587.
+
+Keshta AS, Mallah SI, Al Zubaidi K, Ghorab OK, Keshta MS, Alarabi D, Abousaleh MA, Salman MT, Taha OE, Zeidan AA, Elsaid MF, Tang P. COVID-19 versus SARS: A comparative review. J Infect Public Health. 2021 Jul;14(7):967-977. doi: 10.1016/j.jiph.2021.04.007. Epub 2021 Apr 24. PMID: 34130121; PMCID: PMC8064890.
+
+Sing, T. & Liu, D. (2021). Similarities and Dissimilarities of COVID-19 and Other Coronavirus Diseases. Annual Review of Microbiology, Vol. 75, 19-47. <https://doi.org/10.1146/annurev-micro-110520-023212>
+
+<https://rdrr.io/bioc/QSutils/man/DNA.dist.html>
+
+# Code
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+# Call packages 
+library(ade4)
+library(ape)
+library(adegenet) # Packages to read DNA seq
+library(gridExtra)
+library(ggplot2)
+library(stringr)
+library(seqinr)
+# Bring files, functions files
+source("./lengthSeq.r")
+source("./percentageBases.r")
+source("./phylogeneticTreeGraph.r")
+```
+
+```{r}
+seq1 <- readLines("./secuenciasEvidencia2/USA.fasta", n = -1)[-1]
+var1 <- paste(seq1, collapse = " ")
+seqUSA <- strsplit(var1, "")[[1]]
+
+seq1 <- readLines("./secuenciasEvidencia2/India.fasta", n = -1)[-1]
+var1 <- paste(seq1, collapse = " ")
+seqIndia <- strsplit(var1, "")[[1]]
+
+seq1 <- readLines("./secuenciasEvidencia2/Francia.fasta", n = -1)[-1]
+var1 <- paste(seq1, collapse = " ")
+seqFrancia <- strsplit(var1, "")[[1]]
+
+seq1 <- readLines("./secuenciasEvidencia2/Alemania.fasta", n = -1)[-1]
+var1 <- paste(seq1, collapse = " ")
+seqAlemania <- strsplit(var1, "")[[1]]
+
+seq1 <- readLines("./secuenciasEvidencia2/Brasil.fasta", n = -1)[-1]
+var1 <- paste(seq1, collapse = " ")
+seqBrasil <- strsplit(var1, "")[[1]]
+
+seq1 <- readLines("./secuenciasEvidencia2/Japon.fasta", n = -1)[-1]
+var1 <- paste(seq1, collapse = " ")
+seqJapon <- strsplit(var1, "")[[1]]
+
+seq1 <- readLines("./secuenciasEvidencia2/CoreaDelSur.fasta", n = -1)[-1]
+var1 <- paste(seq1, collapse = " ")
+seqCoreaDelSur <- strsplit(var1, "")[[1]]
+
+seq1 <- readLines("./secuenciasEvidencia2/Italia.fasta", n = -1)[-1]
+var1 <- paste(seq1, collapse = " ")
+seqItalia <- strsplit(var1, "")[[1]]
+
+seq1 <- readLines("./secuenciasEvidencia2/Rusia.fasta", n = -1)[-1]
+var1 <- paste(seq1, collapse = " ")
+seqRusia <- strsplit(var1, "")[[1]]
+
+seq1 <- readLines("./secuenciasEvidencia2/Turquia.fasta", n = -1)[-1]
+var1 <- paste(seq1, collapse = " ")
+seqTurquia <- strsplit(var1, "")[[1]]
+
+dnaSeq_array <- array(c(seqUSA, seqIndia, seqFrancia, seqAlemania, seqBrasil, seqJapon, seqCoreaDelSur, seqItalia, seqRusia, seqTurquia), dim = c(8, 2))
+
+```
+
+
+```{r}
+# Call and store returns values of functions
+# Call length function
+lengthSEQUSA <-lengthSeq(seqUSA)
+lengthSEQIndia <-lengthSeq(seqIndia)
+lengthSEQFrancia <-lengthSeq(seqFrancia)
+lengthSEQAlemania <-lengthSeq(seqAlemania)
+lengthSEQBrasil <-lengthSeq(seqBrasil)
+lengthSEQJapon <-lengthSeq(seqJapon)
+lengthSEQCoreaDelSur <-lengthSeq(seqCoreaDelSur)
+lengthSEQItalia <-lengthSeq(seqItalia)
+lengthSEQRusia <-lengthSeq(seqRusia)
+lengthSEQTurquia <-lengthSeq(seqTurquia)
+# Call percentageBases function
+basesSEQUSA <- percentageBases(seqUSA)
+basesSEQIndia <- percentageBases(seqIndia)
+basesSEQFrancia <- percentageBases(seqFrancia)
+basesSEQAlemania <- percentageBases(seqAlemania)
+basesSEQBrasil <- percentageBases(seqBrasil)
+basesSEQJapon <- percentageBases(seqJapon)
+basesSEQCoreaDelSur <- percentageBases(seqCoreaDelSur)
+basesSEQItalia <- percentageBases(seqItalia)
+basesSEQRusia <- percentageBases(seqRusia)
+basesSEQTurquia <- percentageBases(seqTurquia)
+
+print("Listado de la longitud de las secuencias de COVID-19 utilizadas en este reporte")
+print(paste("Longitud de la secuencia de COVID-19 en Estados Unidos",lengthSEQUSA))
+print(paste("Longitud de la secuencia de COVID-19 en India",lengthSEQIndia))
+print(paste("Longitud de la secuencia de COVID-19 en Francia",lengthSEQFrancia))
+print(paste("Longitud de la secuencia de COVID-19 en Alemania",lengthSEQAlemania))
+print(paste("Longitud de la secuencia de COVID-19 en Brasil",lengthSEQBrasil))
+print(paste("Longitud de la secuencia de COVID-19 en Japon",lengthSEQJapon))
+print(paste("Longitud de la secuencia de COVID-19 en CoreaDelSur",lengthSEQCoreaDelSur))
+print(paste("Longitud de la secuencia de COVID-19 en Italia",lengthSEQItalia))
+print(paste("Longitud de la secuencia de COVID-19 en Rusia",lengthSEQRusia))
+print(paste("Longitud de la secuencia de COVID-19 en Turquia",lengthSEQTurquia))
+```
+
+```{r}
+    gwuhan = data.frame(
+    bases = c("A", "C", "G", "T"),
+    g1 = percentageBases(seqUSA)
+  )
+  q <- ggplot(gwuhan, aes(x = bases, y = g1, fill = bases)) +
+    geom_bar(data = gwuhan, aes(x = bases, y = g1, fill = "SeqUSA"), stat = "identity", position = "dodge") +
+    labs(title = "Comparación de las bases de ADN de las variantes del virus",x = "Bases", y = "Frecuencia", fill = "") +
+    scale_fill_manual(values = c("SeqUSA" = "pink")) +
+    theme_minimal()
+  
+    gwuhan = data.frame(
+    bases = c("A", "C", "G", "T"),
+    g1 = percentageBases(seqIndia)
+  )
+  w <- ggplot(gwuhan, aes(x = bases, y = g1, fill = bases)) +
+    geom_bar(data = gwuhan, aes(x = bases, y = g1, fill = "SeqIndia"), stat = "identity", position = "dodge") +
+    labs(x = "Bases", y = "Frecuencia", fill = "") +
+    scale_fill_manual(values = c("SeqIndia" = "purple")) +
+    theme_minimal()
+
+  grid.arrange(q,w, ncol=2)
+  
+      gwuhan = data.frame(
+    bases = c("A", "C", "G", "T"),
+    g1 = percentageBases(seqFrancia)
+  )
+
+  q <- ggplot(gwuhan, aes(x = bases, y = g1, fill = bases)) +
+    geom_bar(data = gwuhan, aes(x = bases, y = g1, fill = "SeqFrancia"), stat = "identity", position = "dodge") +
+    labs(title = "Comparación de las bases de ADN de las variantes del virus",x = "Bases", y = "Frecuencia", fill = "") +
+    scale_fill_manual(values = c("SeqFrancia" = "pink")) +
+    theme_minimal()
+  
+    gwuhan = data.frame(
+    bases = c("A", "C", "G", "T"),
+    g1 = percentageBases(seqAlemania)
+  )
+  
+  w <- ggplot(gwuhan, aes(x = bases, y = g1, fill = bases)) +
+    geom_bar(data = gwuhan, aes(x = bases, y = g1, fill = "SeqAlemania"), stat = "identity", position = "dodge") +
+    labs(x = "Bases", y = "Frecuencia", fill = "") +
+    scale_fill_manual(values = c("SeqAlemania" = "purple")) +
+    theme_minimal()
+
+  grid.arrange(q,w, ncol=2)
+  
+      gwuhan = data.frame(
+    bases = c("A", "C", "G", "T"),
+    g1 = percentageBases(seqBrasil)
+  )
+
+  q <- ggplot(gwuhan, aes(x = bases, y = g1, fill = bases)) +
+    geom_bar(data = gwuhan, aes(x = bases, y = g1, fill = "SeqBrasil"), stat = "identity", position = "dodge") +
+    labs(title = "Comparación de las bases de ADN de las variantes del virus",x = "Bases", y = "Frecuencia", fill = "") +
+    scale_fill_manual(values = c("SeqBrasil" = "pink")) +
+    theme_minimal()
+  
+    gwuhan = data.frame(
+    bases = c("A", "C", "G", "T"),
+    g1 = percentageBases(seqJapon)
+  )
+  
+  w <- ggplot(gwuhan, aes(x = bases, y = g1, fill = bases)) +
+    geom_bar(data = gwuhan, aes(x = bases, y = g1, fill = "SeqJapon"), stat = "identity", position = "dodge") +
+    labs(x = "Bases", y = "Frecuencia", fill = "") +
+    scale_fill_manual(values = c("SeqJapon" = "purple")) +
+    theme_minimal()
+
+  grid.arrange(q,w, ncol=2)
+  
+      gwuhan = data.frame(
+    bases = c("A", "C", "G", "T"),
+    g1 = percentageBases(seqCoreaDelSur)
+  )
+
+  q <- ggplot(gwuhan, aes(x = bases, y = g1, fill = bases)) +
+    geom_bar(data = gwuhan, aes(x = bases, y = g1, fill = "SeqCoreaDelSur"), stat = "identity", position = "dodge") +
+    labs(title = "Comparación de las bases de ADN de las variantes del virus",x = "Bases", y = "Frecuencia", fill = "") +
+    scale_fill_manual(values = c("SeqCoreaDelSur" = "pink")) +
+    theme_minimal()
+  
+    gwuhan = data.frame(
+    bases = c("A", "C", "G", "T"),
+    g1 = percentageBases(seqItalia)
+  )
+  
+  w <- ggplot(gwuhan, aes(x = bases, y = g1, fill = bases)) +
+    geom_bar(data = gwuhan, aes(x = bases, y = g1, fill = "SeqItalia"), stat = "identity", position = "dodge") +
+    labs(x = "Bases", y = "Frecuencia", fill = "") +
+    scale_fill_manual(values = c("SeqItalia" = "purple")) +
+    theme_minimal()
+
+  grid.arrange(q,w, ncol=2)
+  
+        gwuhan = data.frame(
+    bases = c("A", "C", "G", "T"),
+    g1 = percentageBases(seqRusia)
+  )
+
+  q <- ggplot(gwuhan, aes(x = bases, y = g1, fill = bases)) +
+    geom_bar(data = gwuhan, aes(x = bases, y = g1, fill = "SeqRusia"), stat = "identity", position = "dodge") +
+    labs(title = "Comparación de las bases de ADN de las variantes del virus",x = "Bases", y = "Frecuencia", fill = "") +
+    scale_fill_manual(values = c("SeqRusia" = "pink")) +
+    theme_minimal()
+  
+    gwuhan = data.frame(
+    bases = c("A", "C", "G", "T"),
+    g1 = percentageBases(seqTurquia)
+  )
+  
+  w <- ggplot(gwuhan, aes(x = bases, y = g1, fill = bases)) +
+    geom_bar(data = gwuhan, aes(x = bases, y = g1, fill = "SeqTurquia"), stat = "identity", position = "dodge") +
+    labs(x = "Bases", y = "Frecuencia", fill = "") +
+    scale_fill_manual(values = c("SeqTurquia" = "purple")) +
+    theme_minimal()
+
+  grid.arrange(q,w, ncol=2)
+```
+
+
+```{r}
+# Print phylogeneticTreeGraph
+phylogeneticGraph <- phylogeneticTreeGraph() # Call Function that create graph
+phylogeneticGraph
+```
+Al observar nuestras gráficas, se pueden notar diferencias perceptibles entre las variantes de cada país; sin embargo, estas diferencias no representan cambios significativos, ya que las variantes siguen mostrando parentesco entre sí. Al observar las graficas de las bases de ADN, observamos que todas presentan porcentajes similares en sus bases correspondientes.
+
+Al analizar el árbol filogenético de las 10 secuencias estudiadas, se puede comprender mejor su relación. Se pueden observar varias ramas, y no existe tanto parentesco entre todas las secuencias, sin embargo, algo que note, es que las secuencias de lugares geograficamente cerca, se parecian bastante y se puede observar esto mismo en el arbol.

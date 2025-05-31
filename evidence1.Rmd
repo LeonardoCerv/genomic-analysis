@@ -1,0 +1,134 @@
+---
+title: "ev01"
+author: "Leonardo Cervantes Perez"
+date: "2024-04-28"
+output: pdf_document
+---
+
+## R Markdown
+
+**PARTE 1**
+**Responde justificadamente las siguientes preguntas:**
+
+**¿Cuál es la situación actual de COVID-19 a nivel mundial, en México, en tu estado de origen y en tu municipio, alcaldía o colonia?**
+El sitio de Johns Hopkins University & Medicine, dejó de colectar
+información sobre el COVID-19 el 10 de marzo de 2023, debido a que el COVID ya no se consideraba pandemia, pero de acuerdo con la última medición, había 676,609,955 casos activos con 6,881,955 muertos registrados en todo el mundo.
+
+En México, de acuerdo con la última fecha de datos recabados por Johns Hopkins, se tiene un total de 7,483,444 casos con 333,188 muertes hasta la última
+fecha. 
+
+De acuerdo con la Secretaría de Salud de Hidalgo la última actualización sobre el COVID fue el 5 de julio de 2022, hasta la fecha, se tiene un total de 130,505 casos confirmados y un total de 8,698 defunciones.
+
+Así mismo, en la localidad de Huejutla, hubo un total de 1,148 casos
+confirmados hasta la última fecha, con 216 defunciones.
+
+**¿Cuál fue la primera variante del virus que se propagó a todo el mundo?**
+De acuerdo con la información presentada en el sitio; nextstrain.org/ncov/global, la primera variante que se propagó a todo el mundo fue la Wuhan/WH04/2024.
+
+**¿Cuáles son las otras variantes del virus que existen en otras regiones del mundo?**
+Según el National Library of Medicine y la Organización Mundial de la Salud (hasta el 13 de julio de 2021), se identificaron diez variantes de preocupación e interés del virus:
+•	Variantes de preocupación (Linaje de Pangolín): Alpha (B.1.1.7), Beta (B.1.351), Gamma (P.1), Delta (B.1.617.2).
+•	Variantes de interés (Linaje de Pangolín): Épsilon (B.1.427/B.1.429), Zeta (P.2), Eta (B.1.525), Theta (P.3), Iota (B.1.526), Kappa (B.1.617.1).
+
+**¿Cómo buscarías información de la variante del virus en tu país?**
+Utilizaría fuentes como la página oficial de la Secretaría de Salud de México. Ya que ahí tengo la posibilidad de encontrar información actualizada y confiable sobre la situación del virus y las variantes en México.
+
+
+**Imagina que te encuentras en una situación similar a la de Li Wenliang**, médico chino que intentó alertar sobre el brote de coronavirus en su país, pero fue detenido por las autoridades y obligado a retractarse, ¿qué harías en su caso? Selecciona un inciso:
+a)	Lo reportas al centro de investigación o la universidad. 
+b)	Lo reportas a la prensa. 
+c)	Guardas la información. 
+
+Si me encontrara en la misma situación que Li Wenliang, yo reportaría el caso a
+un centro de investigación o a universidades para que ellos se encargaran encontrar una cura y/o vacuna para la enfermedad, y así poder prevenir contagios, muertes,etc. Creo que esta es la opción mas coherente, ya que la prensa tal vez no me daría atención, o la gente le haría caso omiso, y si me lo guardo, no estaría aportando nada o ayudando a alguien.
+
+
+**PARTE 2**
+**Realiza lo siguiente en un script de R y código:**
+
+
+```{r}
+# Se instalan las librerias necesarias.
+library(stringr)
+library(Biostrings)
+library(ggplot2)
+```
+
+
+**Obtén las secuencias de las variantes de SARS-CoV-2 desde el NCBI o el buscador de virus del NCBI**
+```{r}
+# Obtén las secuencias de las variantes de SARS-CoV-2 desde el NCBI o el buscador de virus del NCBI
+# Corrected file paths to point to secuenciasEvidencia1 folder
+variantes <- c("secuenciasEvidencia1/wuhan.fasta", "secuenciasEvidencia1/ALPHA.fna", 
+               "secuenciasEvidencia1/BETA.fna", "secuenciasEvidencia1/GAMMA.fna", 
+               "secuenciasEvidencia1/Omicron.fna")
+nombres_variantes <- c("Wuhan", "Alpha", "Beta", "Gamma", "Omicron")
+
+# Verify all files exist before proceeding
+missing_files <- variantes[!file.exists(variantes)]
+if(length(missing_files) > 0) {
+    stop(paste("Missing files:", paste(missing_files, collapse = ", ")))
+}
+cat("All sequence files found successfully!\n")
+```
+
+**Calcula la longitud de las secuencias de cada variante**
+```{r}
+# Calcula la longitud de las secuencias de cada variante
+contar_bases <- function(ADN) {
+    a_contador <- str_count(ADN, pattern = "A")
+    t_contador <- str_count(ADN, pattern = "T")
+    g_contador <- str_count(ADN, pattern = "G")
+    c_contador <- str_count(ADN, pattern = "C")
+    n_contador <- str_count(ADN, pattern = "N")
+    data.frame(Base = c("A", "T", "G", "C", "N"), Conteo = c(a_contador, t_contador, g_contador, c_contador, n_contador))
+}
+
+info_adn <- function(ADN) {
+    adn_longitud <- nchar(ADN)
+    gc_contador <- str_count(ADN, pattern = "G|C")
+    gc_porcentaje <- (gc_contador / adn_longitud) * 100
+    cat("Tamaño de las bases:", adn_longitud, "\n")
+    cat("Porcentaje de GC:", gc_porcentaje, "%\n\n")
+}
+
+generar_contrasentido <- function(ADN_set) {
+    contrasentido <- reverseComplement(ADN_set)
+    return(contrasentido)
+}
+```
+
+**Crea una gráfica donde compares las bases de ADN que componen a cada una de las variantes del virus**
+```{r}
+# Main
+for (i in 1:length(variantes)) {
+    # Imprime el nombre de la variante
+    cat("Nombre de la variante:", nombres_variantes[i], "\n")
+    
+    # Lee el archivo de ADN y cuenta las bases
+    ADN_set <- readDNAStringSet(variantes[i])
+    adn <- toString(ADN_set)
+    conteo_bases <- contar_bases(adn)
+    
+    # Gráfico de barras para las bases de ADN
+    ggplot(conteo_bases, aes(x = Base, y = Conteo, fill = Base)) +
+        geom_bar(stat = "identity") +
+        labs(title = paste("Cantidad de bases nitrogenadas de", nombres_variantes[i]),
+                 x = "Base Nitrogenada", y = "Conteo") +
+        theme_minimal()
+    
+    # Mostrar el gráfico
+    print(ggplot(conteo_bases, aes(x = Base, y = Conteo, fill = Base)) +
+                    geom_bar(stat = "identity") +
+                    labs(title = paste("Cantidad de bases nitrogenadas de", nombres_variantes[i]),
+                             x = "Base Nitrogenada", y = "Conteo") +
+                    theme_minimal())
+    
+    # Calcula y muestra el %GC
+    info_adn(adn)
+    
+    # Genera la secuencia contrasentido y almacénala en una variable
+    contrasentido <- generar_contrasentido(ADN_set)
+}
+```
+
