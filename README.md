@@ -15,6 +15,16 @@ A comprehensive bioinformatics analysis of SARS-CoV-2 genomic sequences that exp
 2. **Computational Genomic Analysis** - Quantitative sequence analysis of viral variants from 20 countries worldwide
 3. **Phylogenetic Reconstruction** - Evolutionary relationship mapping and geographic correlation analysis
 
+## Figures
+
+Neighbor-joining phylogenetic tree of 10 SARS-CoV-2 sequences (Analysis 2):
+
+![Neighbor-joining phylogenetic tree of SARS-CoV-2 sequences from 10 countries](docs/screenshots/phylo_tree.jpg)
+
+Nucleotide base composition compared across variants:
+
+![Bar charts comparing A, C, G, T frequencies between two SARS-CoV-2 sequences](docs/screenshots/base_comparison.jpg)
+
 ## Technical Stack & Skills Demonstrated
 
 ### Core Technologies
